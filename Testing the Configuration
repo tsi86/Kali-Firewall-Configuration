@@ -1,0 +1,13 @@
+3.1 Checking Active Firewall Rules
+To check the active rules:
+sudo iptables -L -v
+3.2 Testing Access to Services
+1.	Access the web server at the IP address on port 80 to verify Apache functionality.
+2.	Test SSH connections using port 2222:
+ssh -p 2222 user@<server_IP>
+3.	Confirm MariaDB only accepts local connections:
+mysql -u root -p
+3.3 Testing Unauthorized Connections Blocking
+1.	Test connections on blocked ports (e.g., 23, 21):
+nc -zv <server_IP> <port>
+2.	Verify that the firewall correctly blocks unauthorized traffic.
