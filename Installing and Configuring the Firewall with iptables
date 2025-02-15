@@ -1,0 +1,38 @@
+2.1 Resetting Default Rules
+To start with a clean configuration, clear existing rules:
+sudo iptables -F
+sudo iptables -X
+sudo iptables -Z
+2.2 Setting Default Policies
+Set the default policy to block all incoming connections:
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT ACCEPT
+Explanation:
+•	INPUT DROP: Blocks all incoming connections except those explicitly allowed.
+•	FORWARD DROP: Blocks forwarded traffic.
+•	OUTPUT ACCEPT: Allows all outgoing connections.
+2.3 Allowing Essential Connections
+Add rules to allow essential traffic:
+1.	Allow traffic on the loopback interface:
+sudo iptables -A INPUT -i lo -j ACCEPT
+2.	Allow already established connections:
+sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+Explanation:
+•	-i lo: Allows local (loopback) traffic.
+•	--state ESTABLISHED,RELATED: Allows previously established connections.
+2.4 Configuring Rules for Services
+1.	Apache (port 80): Allow HTTP traffic:
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+2.	SSH (port 2222): Allow SSH connections on the configured port:
+sudo iptables -A INPUT -p tcp --dport 2222 -j ACCEPT
+3.	MariaDB (local only): Allow connections to MariaDB only from the local server:
+sudo iptables -A INPUT -p tcp -s 127.0.0.1 --dport 3306 -j ACCEPT
+Explanation:
+•	--dport: Specifies the port of the respective service.
+•	-s 127.0.0.1: Ensures MariaDB is only accessible locally.
+2.5 Saving and Applying Firewall Rules
+Make the firewall rules persistent:
+sudo apt install iptables-persistent -y
+sudo netfilter-persistent save
+sudo netfilter-persistent reload
